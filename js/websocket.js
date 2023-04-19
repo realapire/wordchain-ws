@@ -219,7 +219,6 @@ function checkWord(clientId, message) {
     });
 }
 
-
 function wrongAnswer(session, currentplayer) {
     session.players.forEach(player => {
         const startMessage = {
@@ -227,24 +226,6 @@ function wrongAnswer(session, currentplayer) {
             currentplayer
         };
         clientsSockets[player.id].send(JSON.stringify(startMessage));
-    });
-}
-
-function timeUp(clientId, currentPlayer) {
-    const session = findSessionByClientId(clientId);
-    if (!session) {
-        console.error(`Client ${clientId} is not in a session`);
-        return;
-    }
-
-    session.players.forEach(player => {
-        if (player.id != clientId) {
-            const message = {
-                type: 'time-up',
-                currentPlayer
-            };
-            clientsSockets[player.id].send(JSON.stringify(message));
-        }
     });
 }
 
@@ -288,8 +269,6 @@ server.on('connection', (socket) => {
             case 'check-word':
                 checkWord(clientId, message);
                 break;
-            case 'time-up':
-                timeUp(clientId, message.currentPlayer);
             default:
                 console.warn(`Unknown message type: ${message.type}`);
                 break;

@@ -1,7 +1,7 @@
 // https://www.npmjs.com/package/ws
 // documentatie: https://github.com/websockets/ws
 const WebSocket = require('ws');
-const server = new WebSocket.Server({ port: 5000 });
+const server = new WebSocket.Server({ port: 4000 });
 
 let nextClientId = 0;
 const clientsSockets = {};

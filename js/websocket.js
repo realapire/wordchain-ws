@@ -1,7 +1,7 @@
 // https://www.npmjs.com/package/ws
 // documentatie: https://github.com/websockets/ws
 const WebSocket = require('ws');
-const server = new WebSocket.Server({ port: 8080 });
+const server = new WebSocket.Server({ port: 5000 });
 
 let nextClientId = 0;
 const clientsSockets = {};
@@ -13,7 +13,6 @@ function handleJoinMessage(clientId, message) {
     console.log(`User ${username} (clientId: ${clientId}) has connected with the server`);
     clientsSockets[clientId].username = username;
 }
-
 
 function createSession(clientId) {
     let sessionId;
@@ -259,7 +258,6 @@ function findSessionByClientId(clientId) {
     console.error(`Client ${clientId} is not in a session`);
     return null;
 }
-
 
 server.on('connection', (socket) => {
     console.log('Client connected');

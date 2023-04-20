@@ -10,7 +10,8 @@ let sessions = {};
 function handleJoinMessage(clientId, message) {
     // Er is een speler gejoined
     const { username } = message;
-    console.log(`User ${username} (clientId: ${clientId}) has connected with the server`);
+    console.log(`User ${username} (clientId: ${clientId}, dashboard ID: ${message.fetchedId}) has connected with the server`);
+    clientsSockets[clientId].dashboardId = message.fetchedId;
     clientsSockets[clientId].username = username;
 }
 
@@ -27,6 +28,7 @@ function createSession(clientId) {
         players: [{
             id: clientId,
             name: clientsSockets[clientId].username,
+            fetchid: clientsSockets[clientId].dashboardId,
             score: 0,
             eliminated: false,
         }],
@@ -115,6 +117,7 @@ function joinSession(clientId, message) {
     const player = {
         id: clientId,
         name: clientsSockets[clientId].username,
+        fetchid: clientsSockets[clientId].dashboardId,
         score: 0,
         eliminated: false,
     };
@@ -125,12 +128,13 @@ function joinSession(clientId, message) {
         type: 'session-joined',
         sessionId,
         host: session.players[0],
-        players: session.players,
+        players: session.players
     };
+    
 
     for (const player of session.players) {
         clientsSockets[player.id].send(JSON.stringify(response));
-    }
+    }   
 
     console.log(`Client ${clientId} joined session ${sessionId}`);
 }

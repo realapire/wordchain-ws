@@ -244,6 +244,29 @@ function findSessionByClientId(clientId) {
     return null;
 }
 
+function restartLobby(session) {
+    session.players.forEach(player => {
+        const message = {
+            type: 'restart-lobby'
+        };
+        clientsSockets[player.id].send(JSON.stringify(message));
+    });
+}
+
+function updateUI(clientId, message) {
+    const session = findSessionByClientId(clientId);
+    session.players.forEach(player => {
+        if (player.name != message.currentplayer.name) {
+            const msg = {
+                type: 'update-ui',
+                text: message.input,
+                turn: message.currentplayer,
+            };
+            clientsSockets[player.id].send(JSON.stringify(msg));
+        }
+    });
+}
+
 server.on('connection', (socket) => {
     console.log('Client connected');
 
@@ -272,6 +295,12 @@ server.on('connection', (socket) => {
                 break;
             case 'check-word':
                 checkWord(clientId, message);
+                break;
+            case 'restart-lobby':
+                restartLobby(clientId);
+                break;
+            case 'input-field':
+                updateUI(clientId, message);
                 break;
             default:
                 console.warn(`Unknown message type: ${message.type}`);

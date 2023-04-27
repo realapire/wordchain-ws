@@ -189,7 +189,8 @@ function checkWord(clientId, message) {
         return;
     }
 
-    const { word } = message;
+    let { word } = message;
+    word = word.replace(/\s/g, '');
 
     if (word[0] != session.lastLetter) {
         console.error(`Word does not begin with start letter ${session.startLetter}`);
